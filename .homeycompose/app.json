@@ -1,0 +1,29 @@
+{
+  "id": "com.polestar.bev",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "brandColor": "#000000",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Polestar"
+  },
+  "description": {
+    "en": "Adds Polestar vehicle support"
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Vincent Boer",
+    "email": "vincent@vdboer.nl"
+  }
+}
