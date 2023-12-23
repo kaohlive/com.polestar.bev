@@ -82,12 +82,16 @@ class PolestarVehicle extends Device {
     // this.setCapabilityValue('measure_current', batteryInfo.chargingCurrentAmps);
     // this.setCapabilityValue('measure_power', batteryInfo.chargingPowerWatts);
     this.setCapabilityValue('odometer', odo);
-    this.setCapabilityValue('chargetimeremaining', batteryInfo.estimatedChargingTimeToFullMinutes);
+    
     this.setCapabilityValue('range', batteryInfo.estimatedDistanceToEmptyKm);
     if(batteryInfo.chargingStatus=='CHARGING_STATUS_CHARGING')
+    {
       this.setCapabilityValue('charging', true);
-    else
+      this.setCapabilityValue('chargetimeremaining', batteryInfo.estimatedChargingTimeToFullMinutes);
+    } else {
       this.setCapabilityValue('charging', false);
+      this.setCapabilityValue('chargetimeremaining', null);
+    }
     if(batteryInfo.chargerConnectionStatus=='CHARGER_CONNECTION_STATUS_CONNECTED')
       this.setCapabilityValue('chargeportconnected', true);
     else

@@ -6,6 +6,9 @@
   "capabilities": [
     "measure_battery"
   ],
+  "energy": {
+    "batteries": ["INTERNAL"]
+  },
   "platforms": [
     "local"
   ],
