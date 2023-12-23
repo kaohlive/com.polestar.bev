@@ -1,9 +1,11 @@
 {
   "id": "com.polestar.bev",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=5.0.0",
   "brandColor": "#000000",
   "sdk": 3,
+  "homeyCommunityTopicId": 98795,
+  "source": "https://github.com/kaohlive/com.polestar.bev",
   "platforms": [
     "local"
   ],

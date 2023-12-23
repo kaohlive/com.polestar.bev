@@ -1,10 +1,12 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.polestar.bev",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=5.0.0",
   "brandColor": "#000000",
   "sdk": 3,
+  "homeyCommunityTopicId": 98795,
+  "source": "https://github.com/kaohlive/com.polestar.bev",
   "platforms": [
     "local"
   ],
@@ -27,6 +29,74 @@
     "name": "Vincent Boer",
     "email": "vincent@vdboer.nl"
   },
+  "flow": {
+    "triggers": [
+      {
+        "title": {
+          "en": "Car disconnected from a charger"
+        },
+        "hint": {
+          "en": "When the car detects it is no longer connected to a charge port"
+        },
+        "args": [
+          {
+            "name": "Vehicle",
+            "type": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ],
+        "id": "chargeportconnected_false"
+      },
+      {
+        "title": {
+          "en": "Car connected to a charger"
+        },
+        "hint": {
+          "en": "When the car detects a charger connected to a charge port"
+        },
+        "args": [
+          {
+            "name": "Vehicle",
+            "type": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ],
+        "id": "chargeportconnected_true"
+      },
+      {
+        "title": {
+          "en": "Car stopped charging"
+        },
+        "hint": {
+          "en": "When the car stopped drawing power from the socket"
+        },
+        "args": [
+          {
+            "name": "Vehicle",
+            "type": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ],
+        "id": "charging_false"
+      },
+      {
+        "title": {
+          "en": "Car started charging"
+        },
+        "hint": {
+          "en": "When the car started to draw power from the socket"
+        },
+        "args": [
+          {
+            "name": "Vehicle",
+            "type": "device",
+            "filter": "driver_id=vehicle"
+          }
+        ],
+        "id": "charging_true"
+      }
+    ]
+  },
   "drivers": [
     {
       "name": {
@@ -36,6 +106,11 @@
       "capabilities": [
         "measure_battery"
       ],
+      "energy": {
+        "batteries": [
+          "INTERNAL"
+        ]
+      },
       "platforms": [
         "local"
       ],
