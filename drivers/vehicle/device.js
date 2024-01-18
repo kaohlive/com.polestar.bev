@@ -59,43 +59,57 @@ class PolestarVehicle extends Device {
     if(this.polestar==null)
     {
       let PolestarUser = this.homey.settings.get('user_email');
-      let PolestarPwd = await HomeyCrypt.decrypt(this.homey.settings.get('user_password'),PolestarUser);
-      this.polestar = new Polestar(PolestarUser,PolestarPwd);
+      try {
+        let PolestarPwd = await HomeyCrypt.decrypt(this.homey.settings.get('user_password'),PolestarUser);
+        this.polestar = new Polestar(PolestarUser,PolestarPwd);
+      } catch (err) {
+        console.info('could not decrypt using salt, network connection changed?');
+        return;   
+      }
       await this.polestar.login();
       await this.polestar.setVehicle(this.getData().vin);
     }
-    var odometer = await this.polestar.getOdometer();
-    console.log(JSON.stringify(odometer));
-    var odo = odometer.odometerMeters;
-    try
-    {
-      odo = odo/1000; //Convert to KM instead of M
-    }
-    catch{
-      odo = null;
-    }
-    console.log('KM:'+odo)
-    var batteryInfo = await this.polestar.getBattery();
-    console.log(JSON.stringify(batteryInfo));
+    try{
+      var odometer = await this.polestar.getOdometer();
+      console.log(JSON.stringify(odometer));
+      var odo = odometer.odometerMeters;
+      try
+      {
+        odo = odo/1000; //Convert to KM instead of M
+      }
+      catch{
+        odo = null;
+      }
+      console.log('KM:'+odo);
+      this.setCapabilityValue('odometer', odo);
+    } catch {
+      console.debug('Failed to retrieve odometer');
+    };
+    try{
+      var batteryInfo = await this.polestar.getBattery();
+      console.log(JSON.stringify(batteryInfo));
 
-    this.setCapabilityValue('measure_battery', batteryInfo.batteryChargeLevelPercentage);
-    // this.setCapabilityValue('measure_current', batteryInfo.chargingCurrentAmps);
-    // this.setCapabilityValue('measure_power', batteryInfo.chargingPowerWatts);
-    this.setCapabilityValue('odometer', odo);
-    
-    this.setCapabilityValue('range', batteryInfo.estimatedDistanceToEmptyKm);
-    if(batteryInfo.chargingStatus=='CHARGING_STATUS_CHARGING')
-    {
-      this.setCapabilityValue('charging', true);
-      this.setCapabilityValue('chargetimeremaining', batteryInfo.estimatedChargingTimeToFullMinutes);
-    } else {
-      this.setCapabilityValue('charging', false);
-      this.setCapabilityValue('chargetimeremaining', null);
+      this.setCapabilityValue('measure_battery', batteryInfo.batteryChargeLevelPercentage);
+      // this.setCapabilityValue('measure_current', batteryInfo.chargingCurrentAmps);
+      // this.setCapabilityValue('measure_power', batteryInfo.chargingPowerWatts);
+
+      
+      this.setCapabilityValue('range', batteryInfo.estimatedDistanceToEmptyKm);
+      if(batteryInfo.chargingStatus=='CHARGING_STATUS_CHARGING')
+      {
+        this.setCapabilityValue('charging', true);
+        this.setCapabilityValue('chargetimeremaining', batteryInfo.estimatedChargingTimeToFullMinutes);
+      } else {
+        this.setCapabilityValue('charging', false);
+        this.setCapabilityValue('chargetimeremaining', null);
+      }
+      if(batteryInfo.chargerConnectionStatus=='CHARGER_CONNECTION_STATUS_CONNECTED')
+        this.setCapabilityValue('chargeportconnected', true);
+      else
+        this.setCapabilityValue('chargeportconnected', false);
+    } catch {
+      console.debug('Failed to retrieve batterystate');
     }
-    if(batteryInfo.chargerConnectionStatus=='CHARGER_CONNECTION_STATUS_CONNECTED')
-      this.setCapabilityValue('chargeportconnected', true);
-    else
-      this.setCapabilityValue('chargeportconnected', false);
   }
 
   /**
